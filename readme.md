@@ -91,6 +91,7 @@ Se crea una carpeta crypto-config que incluye las configuraciones de las organiz
     [ir a archivo configtx.yml](./fiuba-network/configtx.yml)
 
 * Ejecutamos los siguientes comandos
+
     >### Generamos el genesis.block
     >     configtxgen -profile ThreeOrgsOrdererGenesis -channelID system-channel -outputBlock ./channel-artifacts/genesis.block
     >### Generamos channel.tx 
