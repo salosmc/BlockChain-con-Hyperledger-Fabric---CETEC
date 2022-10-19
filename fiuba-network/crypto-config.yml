@@ -1,0 +1,38 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: fiuba.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - localhost
+#Participantes
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.fiuba.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1 #cant. nodos 
+      SANS:
+        - localhost
+    Users:
+      Count: 1 #cant. usuarios
+  - Name: Org2
+    Domain: org2.fiuba.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: org3.fiuba.com
+    EnableNodeOUs: true    
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+    Users:
+      Count: 1
+  
