@@ -1,4 +1,4 @@
-# BlockChain con Hyperledger Fabric
+# BlockChain con Hyperledger Fabric (HyL-f)
 
 ### En colaboracion con el CETEC en marco de la Universidad de Buenos Aires de Ingenieria - Desarrollado en solución a la persistencia de datos en una red descentralizada para la toma de asistencia en instituciones educactivas.
 
@@ -118,7 +118,7 @@ Con docker compose vamos a levantar la red que utiliza todas las configuraciones
 ### Contenedor base de los peers
 Creamos el directorio de trabajo /base.
 
-* Creamos el archivo peer-base.yaml
+* En el directorio /base creamos el archivo peer-base.yaml, que se se encarga de crear contenedor base para los peers de (HyL-f)
 
     > ### peer-base.yaml
     >
@@ -147,8 +147,9 @@ Creamos el directorio de trabajo /base.
 
     [ir a archivo peer-base.yaml](./fiuba-network/base/peer-base.yaml)
 
+### Contenedores de los 
 
-    ### Contenedores para los participantes y el servicio de ordenamiento
+* Creamos el archivo docker-compose-base.yaml que se va a encargar de levantar los contenedores para los participantes y del servicio de ordenamiento.
 
     > ### docker-compose-base.yaml
     > 
@@ -185,4 +186,92 @@ Creamos el directorio de trabajo /base.
     >        peer0.org2.fiuba.com:
     >           ...
 
+    [ir a archivo docker-compose-base.yml](./fiuba-network/base/docker-compose-base.yaml)
 
+* Creamos el archivo docker-compose-cli-couchdb.yaml que se va a encargar de orquestar todos los contenedores en una sola red y ademas agrega las bases de datos de cada participante y servicios como CA y CLI necesarios para la arquitectura (HyL-f).
+
+    > ### docker-compose-cli-couchdb.yaml
+    > 
+    > Tipo : Levantar Red
+    > 
+    > Previsualización del archivo :
+    > 
+    >     networks:
+    >       basic:
+    >     services:
+    >       orderer.fiuba.com:
+    >           extends:
+    >               file:   base/docker-compose-base.yaml
+    >               service: orderer.fiuba.com
+    >           container_name: orderer.fiuba.com
+    >           networks:
+    >               - basic
+    >
+    >       peer0.org1.fiuba.com:
+    >           container_name: peer0.org1.fiuba.com
+    >           extends:
+    >               file:  base/docker-compose-base.yaml
+    >               service: peer0.org1.fiuba.com
+    >           environment:
+    >               ...
+    >           depends_on:
+    >               - orderer.fiuba.com
+    >               - couchdb0
+    >           networks:
+    >               - basic
+    >
+    >       peer0.org2.fiuba.com:
+    >           ...
+    >       
+    >       peer0.org3.fiuba.com:
+    >           ...
+    >
+    >       ca.org1.fiuba.com:
+    >           image: hyperledger/fabric-ca:1.4.8
+    >           environment:
+    >               ...
+    >           ports:
+    >               - "7054:7054"
+    >           command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    >           volumes:
+    >               ...
+    >           container_name: ca.org1.fiuba.com
+    >           networks:
+    >               - basic
+    >       cli:
+    >           container_name: cli
+    >           image: hyperledger/fabric-tools:2.2
+    >           tty: true
+    >           stdin_open: true
+    >           environment:
+    >               ...
+    >           working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    >           command: /bin/bash
+    >           volumes:
+    >               ...
+    >           depends_on:
+    >               - orderer.fiuba.com
+    >               - peer0.org1.fiuba.com
+    >               - peer0.org2.fiuba.com
+    >               - peer0.org3.fiuba.com
+    >           networks:
+    >               - basic
+        
+    >           couchdb0:
+    >               image: couchdb:3.1
+    >           environment:
+    >               ...
+    >           ports: 
+    >               - 5984:5984
+    >           container_name: couchdb0
+    >           networks:
+    >               - basic
+
+    >           couchdb1:
+    >               ...
+    >
+    >           couchdb2:
+    >               ...
+
+
+    [ir a archivo docker-compose-cli-couchdb.yaml](./fiuba-network/docker-compose-cli-couchdb.yaml)

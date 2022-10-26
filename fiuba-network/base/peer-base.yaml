@@ -9,7 +9,7 @@ services:
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
       # ---CHANGED---
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fiuba-network_basic
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fiuba-network_basic  #name network del docker compose
       - FABRIC_LOGGING_SPEC=INFO
      # - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
