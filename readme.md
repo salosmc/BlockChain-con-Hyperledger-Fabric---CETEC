@@ -115,7 +115,7 @@ Verificamos que se haya creado los archivos en channel-artifacts.
 
 Con docker compose vamos a levantar la red que utiliza todas las configuraciones previamente creadas.
 
-### Contenedor base Hyperledger Fabric
+### Contenedor base de los peers
 Creamos el directorio de trabajo /base.
 
 * Creamos el archivo peer-base.yaml
@@ -147,5 +147,42 @@ Creamos el directorio de trabajo /base.
 
     [ir a archivo peer-base.yaml](./fiuba-network/base/peer-base.yaml)
 
+
+    ### Contenedores para los participantes y el servicio de ordenamiento
+
+    > ### docker-compose-base.yaml
+    > 
+    > Tipo : Levantar Red
+    > 
+    > Previsualización del archivo :
+    > 
+    >     services:
+    >       orderer.fiuba.com:
+    >           container_name: orderer.fiuba.com
+    >           image: hyperledger/fabric-orderer:2.2.0
+    >           environment:
+    >               ...
+    >           working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    >           command: orderer
+    >           volumes:
+    >               ...
+    >           ports:
+    >               - 7050:7050
+    >
+    >       peer0.org1.fiuba.com:
+    >           container_name: peer0.org1.fiuba.com
+    >           extends:
+    >               file: peer-base.yaml
+    >               service: peer-base
+    >           environment:
+    >               ...
+    >           volumes:
+    >               ...
+    >           ports:
+    >               - 7051:7051
+    >               - 7053:7053
+    >
+    >        peer0.org2.fiuba.com:
+    >           ...
 
 
