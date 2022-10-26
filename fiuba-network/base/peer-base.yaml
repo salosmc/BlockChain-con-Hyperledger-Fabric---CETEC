@@ -1,9 +1,3 @@
-# Copyright Business Blockchain www.blockchainempresarial.com. All Rights Reserved.
-# Autor: Ricardo Ruano, ricardo@blockchainempresarial.com
-# Date: 20-08-2020
-# SPDX-License-Identifier: Apache-2.0
-#
-
 version: '2'
 
 services:
@@ -15,7 +9,7 @@ services:
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
       # ---CHANGED---
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=acme-network_basic
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fiuba-network_basic
       - FABRIC_LOGGING_SPEC=INFO
      # - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true

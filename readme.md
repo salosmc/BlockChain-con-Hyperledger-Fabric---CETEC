@@ -6,7 +6,7 @@
 
 ## Arquitectura 
 
-//imagen
+![Imagen Diseño BlockChain](./img/dise%C3%B1oSoluci%C3%B3nBlockchain.png)
 
 //describimos que seria cada uno de los componentes.
 
@@ -145,7 +145,7 @@ Creamos el directorio de trabajo /base.
     >     command: peer node start
 
 
-    [ir a archivo configtx.yml](./fiuba-network/configtx.yml)
+    [ir a archivo peer-base.yaml](./fiuba-network/base/peer-base.yaml)
 
 
 
