@@ -12,7 +12,7 @@
 
 ## Generamos configuraciones
 
-### Creamos material criptografico //identidad de los "participantes"
+### Creamos material criptografico // identidad de los "participantes"
 
 * Creamos el archivo crypto-config.yml
 
@@ -52,7 +52,7 @@ Se crea una carpeta crypto-config que incluye las configuraciones de las organiz
 // previsualizacion de la esctrucutura de directorios y certificaciones que deberia crearse por Hyperledger segun lo configurado por crypto-config.yml
 
 
-### Creamos configuraciones de bloque y transacciones. // como se van a comunicar los participantes.
+### Creamos configuraciones de bloque y transacciones. // como se van a comunicar los participantes?
 
 * Creamos el archivo configtx.yml
 
@@ -111,6 +111,41 @@ Verificamos que se haya creado los archivos en channel-artifacts.
 //previsualización diagrama de rama de archivos generados.
 
 
+## Levantamos la red
+
+Con docker compose vamos a levantar la red que utiliza todas las configuraciones previamente creadas.
+
+### Contenedor base Hyperledger Fabric
+Creamos el directorio de trabajo /base.
+
+* Creamos el archivo peer-base.yaml
+
+    > ### peer-base.yaml
+    >
+    > Tipo: Levantar Red
+    >
+    > Previsualización del archivo:
+    >
+    >     version: '2'
+    >     services:
+    >         peer-base:
+    >             image: hyperledger/fabric-peer:2.2.0
+    >             environment:
+    >                 - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+    >                 - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fiuba-network_basic
+    >                 - FABRIC_LOGGING_SPEC=INFO
+    >                 - CORE_PEER_TLS_ENABLED=true
+    >                 - CORE_PEER_GOSSIP_USELEADERELECTION=true
+    >                 - CORE_PEER_GOSSIP_ORGLEADER=false
+    >                 - CORE_PEER_PROFILE_ENABLED=true
+    >                 - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+    >                 - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+    >                 - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    >     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    >     command: peer node start
+
+
+    [ir a archivo configtx.yml](./fiuba-network/configtx.yml)
 
 
 
