@@ -275,5 +275,5 @@ Creamos el directorio de trabajo /base.
     >           couchdb2:
     >               ...
 
-
     [ir a archivo docker-compose-cli-couchdb.yaml](./fiuba-network/docker-compose-cli-couchdb.yaml)
+
