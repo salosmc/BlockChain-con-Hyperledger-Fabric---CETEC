@@ -147,7 +147,7 @@ Creamos el directorio de trabajo /base.
 
     [ir a archivo peer-base.yaml](./fiuba-network/base/peer-base.yaml)
 
-### Contenedores de los 
+### Contenedores de los participantes y del servicio de ordenamiento
 
 * Creamos el archivo docker-compose-base.yaml que se va a encargar de levantar los contenedores para los participantes y del servicio de ordenamiento.
 
@@ -187,6 +187,8 @@ Creamos el directorio de trabajo /base.
     >           ...
 
     [ir a archivo docker-compose-base.yml](./fiuba-network/base/docker-compose-base.yaml)
+
+### Orquestamos los contenedores creados y ademas se agregan las bases de datos y servicios CA y CLI
 
 * Creamos el archivo docker-compose-cli-couchdb.yaml que se va a encargar de orquestar todos los contenedores en una sola red y ademas agrega las bases de datos de cada participante y servicios como CA y CLI necesarios para la arquitectura (HyL-f).
 
