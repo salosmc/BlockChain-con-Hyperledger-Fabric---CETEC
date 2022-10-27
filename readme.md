@@ -258,7 +258,7 @@ Creamos el directorio de trabajo /base.
     >               - peer0.org3.fiuba.com
     >           networks:
     >               - basic
-        
+    >   
     >           couchdb0:
     >               image: couchdb:3.1
     >           environment:
@@ -268,7 +268,7 @@ Creamos el directorio de trabajo /base.
     >           container_name: couchdb0
     >           networks:
     >               - basic
-
+    >
     >           couchdb1:
     >               ...
     >
