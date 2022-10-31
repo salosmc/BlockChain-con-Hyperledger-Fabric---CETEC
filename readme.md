@@ -277,3 +277,71 @@ Creamos el directorio de trabajo /base.
 
     [ir a archivo docker-compose-cli-couchdb.yaml](./fiuba-network/docker-compose-cli-couchdb.yaml)
 
+### Levantamos todo
+
+* Vamos a trabajar con un cliente para administrar los contenedores como portainer.
+Para eso creamos primero un volumen
+
+      docker volume create portainer_data
+    
+* Levantamos el contenedor
+
+      docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+    
+* Nos conectamos al localhost:9000 y creamos una cuenta antes de los 3 minutos.
+
+    ![login portainer](/img/portainerLogin.png)
+
+* Exportamos las variables de entorno que necesitamos.
+
+      export CHANNEL_NAME=attendance
+      export VERBOSE=false
+      export FABRIC_CFG_PATH=$PWD
+    
+* Ahora sí, levantamos el docker compose.
+
+      CHANNEL_NAME=$CHANNEL_NAME docker compose -f docker-compose-cli-couchdb.yaml up -d
+
+* Verificamos si se levanto todo.
+      
+    ![containers levantados](/img/conteinersLevantados.png)
+
+### Terminamos de configurar la red
+
+* Creamos el canal "attendance". Nos conectamos a la consola de comando del contenedor CLI.
+
+      -export CHANNEL_NAME=attendance
+      -peer channel create -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orde.ers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem 
+
+    Se nos tiene que crear el archivo attendance.block
+
+
+* Añadimos la primer organizacion al canal que toma por defecto CLI.
+
+      -peer channel join -b attendance.block
+
+* Añadimos la segunda organización al canal
+
+      -CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/users/Admin@org2.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org2.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/peers/peer0.org2.fiuba.com/tls/ca.crt peer channel join -b attendance.block
+
+* Añadimos la tercer organización al canal.
+
+      -CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/users/Admin@org3.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org3.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt peer channel join -b attendance.block
+
+### Terminamos de configurar a los participantes de la red
+
+Tenemos que tener seteado en cada organizacion el anchorpeer correspondiente.
+
+* Para la organización 1
+
+      peer channel update -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org1MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
+
+* Para la organización 2
+
+      CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/users/Admin@org2.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org2.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/peers/peer0.org2.fiuba.com/tls/ca.crt peer channel update -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org2MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
+
+* Para la organización 3
+
+      CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/users/Admin@org3.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org3.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt peer channel update -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org3MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
+      
+### FELICIDADES!!! ACA SE TERMINA TODO LO DEVOPS PARA BLOCKCHAIN
