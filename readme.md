@@ -348,3 +348,52 @@ Tenemos que tener seteado en cada organizacion el anchorpeer correspondiente.
 
 ## Agregamos los ChainCode y/o SmartContract
 
+### Creamos el nuestro smartContract
+
+En este caso vamos a usar Golang y se va a llamar foodcontrol, pero simplemente por que en el curso en que nos estamos basando lo que hacian era persisitir información de comida "Food" y todas la rutas de configuracion utilizaron ese nombre.
+Lo idea seria llamarlo alumnoControl y volver a generar todas las configuraciones con las rutas actualizadas.
+
+* Creamos el archivo foodcontrol.go en el directorio /chaincode.
+
+> ### Datos que se van a persisitir.
+>
+>     type Alumno struct {
+>	    Nombre string `json:"nombre"`
+>	    Apellido string `json:"apellido"`
+>	    Padron int `json:"padron"`
+>	    Materia string `json:"materia"`
+>	    Asistencia bool `json:"asistencia"`
+>     }
+
+> ### Metodos necesarios
+>
+>     func (s *SmartContract) Set(ctx contractapi.TransactionContextInterface,
+>        alumnoId string,
+>        nombre string,
+>        apellido string,
+>        padron int ,
+>        materia string,
+>        asistencia bool)
+>      error
+>     func (s *SmartContract) Query(ctx contractapi.TransactionContextInterface,
+>       alumnoId string)
+>     (*Alumno, error)
+
+> ### Main
+>
+>     func main() {
+>       chaincode, err := contractapi.NewChaincode(new(SmartContract))
+>       if err != nil {
+>   		fmt.Printf("Error create foodcontrol chaincode: %s", err.Error())
+>   		return
+>   	}
+>   	if err := chaincode.Start(); err != nil {
+>   		fmt.Printf("Error starting foodcontrol chaincode: %s", err.Error())
+>   	}
+>     }
+
+
+[ver archivo foodcontrol.go](./chaincode/foodcontrol/foodcontrol.go)
+
+### Agregamos nuestros smartcontract a la red
+
