@@ -397,3 +397,56 @@ Lo idea seria llamarlo alumnoControl y volver a generar todas las configuracione
 
 ### Agregamos nuestros smartcontract a la red
 
+Ahora nos conectamos al servicio de CLI ejecutamos las siguientes lineas.
+
+* Configuramos las siguientes variables de entorno.
+
+      export CHANNEL_NAME=attendance
+      export CHAINCODE_NAME=foodcontrol
+      export CHAINCODE_VERSION=1
+      export CC_RUNTIME_LANGUAGE=golang
+      export CC_SRC_PATH="../../../chaincode/$CHAINCODE_NAME"
+      export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
+
+* Generamos el package del chaincode.
+
+      peer lifecycle chaincode package ${CHAINCODE_NAME}.tar.gz --path ${CC_SRC_PATH} --lang ${CC_RUNTIME_LANGUAGE} --label ${CHAINCODE_NAME}_${CHAINCODE_VERSION} >&log.txt
+
+* Instalamos el chaincode en la primer organización
+
+      peer lifecycle chaincode install ${CHAINCODE_NAME}.tar.gz
+
+    Nos tiene que retornar un identificador para el chaincode que vamos a usar para commitear.
+    
+      foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
+
+* Instalamos el chaincode en la segunda organización
+
+      CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/users/Admin@org2.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org2.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org2MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.fiuba.com/peers/peer0.org2.fiuba.com/tls/ca.crt peer lifecycle chaincode install ${CHAINCODE_NAME}.tar.gz
+
+    Nos retorna el siguiente identificador
+      
+      foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
+
+* Instalamos el chaincode en la tercer organización
+
+      CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/users/Admin@org3.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org3.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt peer lifecycle chaincode install ${CHAINCODE_NAME}.tar.gz
+
+    Nos retorna el siguiente identificador.
+
+      foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
+
+    Observar que los identificadores deben ser los mismos.
+
+* Definimos las politicas de aprobación para el chaincode, aca es donde decidimos que organizaciones tienen permisos para firmar transacciones.
+En este caso solo las primera y tercera organizacion van a tener permisos de escritura.
+
+      peer lifecycle chaincode approveformyorg --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --waitForEvent --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --package-id foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
+    
+    Observacion: tuve que corregir esta variable de entorno.
+
+      export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
+
+
+
+
