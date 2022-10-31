@@ -345,3 +345,6 @@ Tenemos que tener seteado en cada organizacion el anchorpeer correspondiente.
       CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/users/Admin@org3.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org3.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt peer channel update -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/Org3MSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
       
 ### FELICIDADES!!! ACA SE TERMINA TODO LO DEVOPS PARA BLOCKCHAIN
+
+## Agregamos los ChainCode y/o SmartContract
+
