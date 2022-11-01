@@ -466,6 +466,8 @@ En este caso solo las primera y tercera organizacion van a tener permisos de esc
 
       peer lifecycle chaincode commit -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA --peerAddresses peer0.org1.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.fiuba.com/peers/peer0.org1.fiuba.com/tls/ca.crt --peerAddresses peer0.org3.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')"
 
+### Probamos los smartcontract
+
 * Probamos que funcione todo correctamente ejecutando un ejemplo.
   
   Ejecutamos el caso de Set.
@@ -481,3 +483,4 @@ En este caso solo las primera y tercera organizacion van a tener permisos de esc
   Ejecutamos el caso de Query.
 
       peer chaincode invoke -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Query","did:3"]}'
+
