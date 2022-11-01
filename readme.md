@@ -406,7 +406,7 @@ Ahora nos conectamos al servicio de CLI ejecutamos las siguientes lineas.
       export CHAINCODE_VERSION=1
       export CC_RUNTIME_LANGUAGE=golang
       export CC_SRC_PATH="../../../chaincode/$CHAINCODE_NAME"
-      export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/acme.com/orderers/orderer.acme.com/msp/tlscacerts/tlsca.acme.com-cert.pem
+      export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
 
 * Generamos el package del chaincode.
 
@@ -440,13 +440,44 @@ Ahora nos conectamos al servicio de CLI ejecutamos las siguientes lineas.
 
 * Definimos las politicas de aprobación para el chaincode, aca es donde decidimos que organizaciones tienen permisos para firmar transacciones.
 En este caso solo las primera y tercera organizacion van a tener permisos de escritura.
+   
+   Para la primer organización.
 
       peer lifecycle chaincode approveformyorg --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --waitForEvent --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --package-id foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
-    
-    Observacion: tuve que corregir esta variable de entorno.
 
-      export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem
+   Para la tercer organización.
+
+      CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/users/Admin@org3.fiuba.com/msp CORE_PEER_ADDRESS=peer0.org3.fiuba.com:7051 CORE_PEER_LOCALMSPID="Org3MSP" CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt peer lifecycle chaincode approveformyorg --tls --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --waitForEvent --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --package-id foodcontrol_1:d7dcb74d448855c2b545033b3c985f92c245642198f61283dadfa24c4204f32b
+
+   Comprobamos que las politicas esten correctas, ejecutando la siguiente linea de comando:
+      
+      peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')" --output json
+
+   resultado esperado
+
+      "approvals": {
+            "Org1MSP": true,
+            "Org2MSP": false,
+            "Org3MSP": true
+      }
 
 
+* Por ultimo comiteamos el chaincode.
 
+      peer lifecycle chaincode commit -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA --peerAddresses peer0.org1.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.fiuba.com/peers/peer0.org1.fiuba.com/tls/ca.crt --peerAddresses peer0.org3.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')"
 
+* Probamos que funcione todo correctamente ejecutando un ejemplo.
+  
+  Ejecutamos el caso de Set.
+
+      peer chaincode invoke -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Set","did:3","ricardo","banana","555","Fisica","true"]}'
+
+  Corroboramos en la base de datos:
+
+  ![informacionPersisitida](./img/informacionPersisitida.png)
+
+//Observación -> no me esta dejando actualizar un Alumno, es decir generar otro estado.
+
+  Ejecutamos el caso de Query.
+
+      peer chaincode invoke -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA -C $CHANNEL_NAME -n $CHAINCODE_NAME -c '{"Args":["Query","did:3"]}'
