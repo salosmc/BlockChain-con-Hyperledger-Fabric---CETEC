@@ -2,44 +2,43 @@
 
 ### En colaboracion con el CETEC en marco de la Universidad de Buenos Aires de Ingenieria - Desarrollado en solución a la persistencia de datos en una red descentralizada para la toma de asistencia en instituciones educactivas.
 
-
-
 ## Arquitectura 
 
 ![Imagen Diseño BlockChain](./img/dise%C3%B1oSoluci%C3%B3nBlockchain.png)
 
-//describimos que seria cada uno de los componentes.
+### Peers
 
-* Peers , pares o nodos en la practica son lo mismo.
-//tenemos que explicar
-//decir nodo es mas abstracto, es donde se ejecuta una logica.
-//Podemos decir que un peer, es un nodo donde se ejecuta logica del negocio.
+Un peer, es un nodo donde se ejecuta logica del negocio, este puede tomar dos roles:
       
-  //el nodo peer puede tomar dos roles:
+* committing Peer, mantiene el libro mayor y el estado, confima transacciones y puede contener contratos inteligentes(chaincode).
 
-  //committing Peer, mantiene el libro mayor y el estado, confima transacciones y puede contener contratos inteligentes(chaincode).
+* Endorsing Peer, recibe una propuesta de transacción para respaldo, responde otorgando o denegando el respaldo. Debe tener contrato inteligente , verifica que su contenido obedezca a un contrato inteligente determinado, el endosante "firma" el contrato. 
 
-  //Endorsing Peer, recibe una propuesta de transacción para respaldo, responde otorgando o denegando el respaldo. Debe tener contrato inteligente , verifica que su contenido obedezca a un contrato inteligente determinado, el endosante "firma" el contrato. 
+### Orderer
 
-//Podemos ver al servicio de ordenamiento como un nodo que ejecuta logica propia de la arquitectura , como lo es ordenar las transacciones.
+Podemos ver al servicio de ordenamiento como un nodo que ejecuta logica propia de la arquitectura de HyL-f, como lo es ordenar las transacciones.
+Es el responsable de mantener la integridad y el orden de las transacciones, y tambien es el encargado de asegurar la ejecución del protocolo de consenso, como:
 
-* miembros, partcipantes o organizaciones tambien son sinonimos.
-//son parte de la red
+* Solo(Testing). 
+* Kafka-based(producción) es mas centralizada.
+* RAFT(Producción) desde v1.4.2, cada organizacion puede ser parte del cluster y proponer nuevos participantes, lo que permite descentralizar mas la red. Aunque aun usa un sistema (lider-seguidor) donde el lider va cambiando entre los participantes de la red. 
+Por lo tanto lo mas ideoneo en producción actualmente es, buenas politicas de endorsamiento en combinación con RAFT.
 
-* Servicio de ordenamiento, es el responsable de mantener la integridad y el orden de las transacciones y tambien es el encargado de asegurar la ejecución del protocolo de consenso.
+### Organizaciones
 
-// Aprueba la inclusión de bloques de transacciones en el libro mayor y se comunica con los nodos peers que se comprometen y respaldan, controla lo que va en el libro mayor asegurandose de que sea consistente. No tiene contratos inteligentes, no tiene libro mayor.
+Llamamos organizaciones a los miembros y/o participantes que conforman la red y que conforman parte del consenso.
 
-// tipos de servicio de ordenamiento: Solo(Testing), Kafka-based(producción) es mas centralizada, RAFT(Producción) desde v1.4.2 -> cada organizacion puede ser parte del cluster y proponer nuevos participantes y permite descentralizar mas la red. Aunque aun usa un sistema (lider-seguidor) donde el lider va cambiando entre los participantes de la red. 
-//Por lo tanto lo mas ideoneo en produccion actualmente es, buenas politicas de endorsamiento en combinación con RAFT.
+### Channel
 
-* Canal o channel , nos permite vincular un tipo determinado de transacciones en el libro mayor.
+Canal o channel, nos permite vincular un tipo determinado de transacciones en el libro mayor.
 De esa manera podemos abstraer en el modelo de negocio el tipo de transacciones que se van a persistir en el libro mayor.
 Y aislar el tipo de transacciones entre los participantes de la red.
 Es decir que no todos los participantes tienen acceso a la misma información, solo los que pertenecen al mismo canal.
 
-* CLI, cliente de hyperledger fabric. 
-//El cliente utiliza el SDK de Hyperledger fabric para enviar una transaccion a la red 
+### CLI
+
+Es un servicio que nos da hyperledger para comunicarnos con las organizaciones y consumir/administrar los smartcontract.
+El cliente utiliza el SDK de Hyperledger fabric para enviar una transaccion a la red.
 
 ## Generamos configuraciones
 
