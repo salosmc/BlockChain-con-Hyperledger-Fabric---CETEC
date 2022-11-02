@@ -10,6 +10,37 @@
 
 //describimos que seria cada uno de los componentes.
 
+* Peers , pares o nodos en la practica son lo mismo.
+//tenemos que explicar
+//decir nodo es mas abstracto, es donde se ejecuta una logica.
+//Podemos decir que un peer, es un nodo donde se ejecuta logica del negocio.
+      
+  //el nodo peer puede tomar dos roles:
+
+  //committing Peer, mantiene el libro mayor y el estado, confima transacciones y puede contener contratos inteligentes(chaincode).
+
+  //Endorsing Peer, recibe una propuesta de transacción para respaldo, responde otorgando o denegando el respaldo. Debe tener contrato inteligente , verifica que su contenido obedezca a un contrato inteligente determinado, el endosante "firma" el contrato. 
+
+//Podemos ver al servicio de ordenamiento como un nodo que ejecuta logica propia de la arquitectura , como lo es ordenar las transacciones.
+
+* miembros, partcipantes o organizaciones tambien son sinonimos.
+//son parte de la red
+
+* Servicio de ordenamiento, es el responsable de mantener la integridad y el orden de las transacciones y tambien es el encargado de asegurar la ejecución del protocolo de consenso.
+
+// Aprueba la inclusión de bloques de transacciones en el libro mayor y se comunica con los nodos peers que se comprometen y respaldan, controla lo que va en el libro mayor asegurandose de que sea consistente. No tiene contratos inteligentes, no tiene libro mayor.
+
+// tipos de servicio de ordenamiento: Solo(Testing), Kafka-based(producción) es mas centralizada, RAFT(Producción) desde v1.4.2 -> cada organizacion puede ser parte del cluster y proponer nuevos participantes y permite descentralizar mas la red. Aunque aun usa un sistema (lider-seguidor) donde el lider va cambiando entre los participantes de la red. 
+//Por lo tanto lo mas ideoneo en produccion actualmente es, buenas politicas de endorsamiento en combinación con RAFT.
+
+* Canal o channel , nos permite vincular un tipo determinado de transacciones en el libro mayor.
+De esa manera podemos abstraer en el modelo de negocio el tipo de transacciones que se van a persistir en el libro mayor.
+Y aislar el tipo de transacciones entre los participantes de la red.
+Es decir que no todos los participantes tienen acceso a la misma información, solo los que pertenecen al mismo canal.
+
+* CLI, cliente de hyperledger fabric. 
+//El cliente utiliza el SDK de Hyperledger fabric para enviar una transaccion a la red 
+
 ## Generamos configuraciones
 
 ### Creamos material criptografico // identidad de los "participantes"
@@ -47,9 +78,9 @@
 
 ### Resultados
 
-Se crea una carpeta crypto-config que incluye las configuraciones de las organizaciones que conforman la red, incluyendo sus indentidades digitales.
+Se crea una carpeta crypto-config que incluye las configuraciones de las organizaciones que conforman la red, y la indentidad digital de sus participantes.
 
-// previsualizacion de la esctrucutura de directorios y certificaciones que deberia crearse por Hyperledger segun lo configurado por crypto-config.yml
+![imgGeneramosCryptoConfig](./img/generamoscryptoconfig.png)
 
 
 ### Creamos configuraciones de bloque y transacciones. // como se van a comunicar los participantes?
@@ -108,7 +139,7 @@ Se crea una carpeta crypto-config que incluye las configuraciones de las organiz
 
 Verificamos que se haya creado los archivos en channel-artifacts.
 
-//previsualización diagrama de rama de archivos generados.
+![imgGeneramosChannelArtifacts](./img/generamosChannelArtifacts.png)
 
 
 ## Levantamos la red
