@@ -42,7 +42,8 @@ El cliente utiliza el SDK de Hyperledger fabric para enviar una transaccion a la
 
 ## Generamos configuraciones
 
-### Creamos material criptografico // identidad de los "participantes"
+### Creamos material criptografico
+Conceptualmente representan las configuraciones que van a representar la identidad de nuestros participantes.
 
 * Creamos el archivo crypto-config.yml
 
@@ -82,7 +83,8 @@ Se crea una carpeta crypto-config que incluye las configuraciones de las organiz
 ![imgGeneramosCryptoConfig](./img/generamoscryptoconfig.png)
 
 
-### Creamos configuraciones de bloque y transacciones. // como se van a comunicar los participantes?
+### Creamos configuraciones de bloque y transacciones.
+Conceptualmente representa las configuraciones que van a determinar, comó se van a comunicar los participantes de la red.
 
 * Creamos el archivo configtx.yml
 
@@ -376,11 +378,11 @@ Tenemos que tener seteado en cada organizacion el anchorpeer correspondiente.
       
 ### FELICIDADES!!! ACA SE TERMINA TODO LO DEVOPS PARA BLOCKCHAIN
 
-## Agregamos los ChainCode y/o SmartContract
+## Agregamos los chaincode y/o smartsontract
 
-### Creamos el nuestro smartContract
+### Creamos nuestro chaincode
 
-En este caso vamos a usar Golang y se va a llamar foodcontrol, pero simplemente por que en el curso en que nos estamos basando lo que hacian era persisitir información de comida "Food" y todas la rutas de configuracion utilizaron ese nombre.
+En este caso vamos a usar Golang y se va a llamar foodcontrol, pero simplemente por que en el curso en que nos estamos basando, persisitían información de comida "Food" y todas la rutas de configuración utilizaron ese nombre.
 Lo idea seria llamarlo alumnoControl y volver a generar todas las configuraciones con las rutas actualizadas.
 
 * Creamos el archivo foodcontrol.go en el directorio /chaincode.
@@ -508,7 +510,7 @@ En este caso solo las primera y tercera organizacion van a tener permisos de esc
 
   ![informacionPersisitida](./img/informacionPersisitida.png)
 
-//Observación -> no me esta dejando actualizar un Alumno, es decir generar otro estado.
+//Observación -> no me esta dejando actualizar un Alumno, es decir generar otro estado. (a corregir)
 
   Ejecutamos el caso de Query.
 
