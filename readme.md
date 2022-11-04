@@ -380,6 +380,10 @@ Tenemos que tener seteado en cada organizacion el anchorpeer correspondiente.
 
 ## Agregamos los chaincode y/o smartsontract
 
+Un chaincode es un bloque de codigo que tiene logica de persisitnencia y consulta de informacion en la blockchain.
+Un smartcontract hace referencia a la logica del negocio, es decir que información queremos persisitir.
+Un chaincode puede agrupar varios smartcontract.
+
 ### Creamos nuestro chaincode
 
 En este caso vamos a usar Golang y se va a llamar foodcontrol, pero simplemente por que en el curso en que nos estamos basando, persisitían información de comida "Food" y todas la rutas de configuración utilizaron ese nombre.
@@ -387,7 +391,7 @@ Lo idea seria llamarlo alumnoControl y volver a generar todas las configuracione
 
 * Creamos el archivo foodcontrol.go en el directorio /chaincode.
 
-> ### Datos que se van a persisitir.
+> ### Datos que se van a persisitir
 >
 >     type Alumno struct {
 >	    Nombre string `json:"nombre"`
@@ -427,7 +431,7 @@ Lo idea seria llamarlo alumnoControl y volver a generar todas las configuracione
 
 [ver archivo foodcontrol.go](./chaincode/foodcontrol/foodcontrol.go)
 
-### Agregamos nuestros smartcontract a la red
+### Agregamos nuestro chaincode a la red
 
 Ahora nos conectamos al servicio de CLI ejecutamos las siguientes lineas.
 
@@ -498,7 +502,7 @@ En este caso solo las primera y tercera organizacion van a tener permisos de esc
 
       peer lifecycle chaincode commit -o orderer.fiuba.com:7050 --tls --cafile $ORDERER_CA --peerAddresses peer0.org1.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.fiuba.com/peers/peer0.org1.fiuba.com/tls/ca.crt --peerAddresses peer0.org3.fiuba.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.fiuba.com/peers/peer0.org3.fiuba.com/tls/ca.crt --channelID $CHANNEL_NAME --name $CHAINCODE_NAME --version $CHAINCODE_VERSION --sequence 1 --signature-policy "OR ('Org1MSP.peer','Org3MSP.peer')"
 
-### Probamos los smartcontract
+### Probamos la persisitencia de los smartcontract
 
 * Probamos que funcione todo correctamente ejecutando un ejemplo.
   
