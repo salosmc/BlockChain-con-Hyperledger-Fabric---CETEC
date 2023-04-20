@@ -343,7 +343,7 @@ Para eso creamos primero un volumen
 * Creamos el canal "attendance". Nos conectamos a la consola de comando del contenedor CLI.
 
       -export CHANNEL_NAME=attendance
-      -peer channel create -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orde.ers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem 
+      -peer channel create -o orderer.fiuba.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/fiuba.com/orderers/orderer.fiuba.com/msp/tlscacerts/tlsca.fiuba.com-cert.pem 
 
     Se nos tiene que crear el archivo attendance.block
 
